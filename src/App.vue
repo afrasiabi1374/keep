@@ -1,30 +1,66 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <TagModal v-model="maskProp" @close="closeModal"/>
+  <div class="main-wrapper">
+    <Header @navToggle="navToggle"/>
+    <MegaMenu @editLabel="showModal" v-model="toggleVal"/>
+    <router-view></router-view>
   </div>
-  <router-view/>
 </template>
-
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+<script>
+import { reactive, ref } from '@vue/reactivity'
+import Header from './components/Header'
+import MegaMenu from './components/MegaMenu'
+import TagModal from './components/TagModal'
+export default {
+  components: { Header, MegaMenu, TagModal },
+  setup () {
+    const maskProp = reactive({
+      actived: false
+    })
+    const showModal = () => {
+      maskProp.actived = true
+    }
+    const closeModal = () => {
+      maskProp.actived = false
+    }
+    const toggleVal = ref(true)
+    const navToggle = () => {
+      toggleVal.value = !toggleVal.value
+    }
+    return {
+      toggleVal,
+      navToggle,
+      maskProp,
+      showModal,
+      closeModal
     }
   }
 }
+</script>
+
+<style lang="scss">
+.main-wrapper {
+  display: flex;
+}
+.menu-container{
+  display: inline-block;
+  min-height: 90vh;
+  width: 20%;
+  position: fixed;
+  background-color: cyan;
+  top: 11%;
+}
+.menu {
+  list-style-type: none;
+}
+.menu-items {
+  display: flex;
+  align-items: center;
+  border-radius: 0 25px 25px 0;
+  width: 100%;
+  img{
+    padding: 10px 18px;
+  }
+}
+
 </style>
