@@ -64,10 +64,9 @@ export default createStore({
     saveNote (state, note) {
       note.id
         ? state.notes.splice(state.notes.findIndex(n => n.id === note.id), 1, note)
-        : state.notes.push({ ...note, id: 1 + state.notes.length, archived: false })
-      console.log('notes in mutation', state)
+        : state.notes.push(JSON.parse(JSON.stringify({ ...note, id: 1 + state.notes.length, archived: false })))
       updateLocalStorage(state.notes)
-      note = null
+      console.log('notes in mutation', state.notes)
     },
     saveLabel (state, tag) {
       console.log('sended tag', tag)
@@ -78,7 +77,10 @@ export default createStore({
       console.log('all tags', state.tags)
     },
     addLabelOnTodo (state, todoIdAndtagId) {
-      state.notes[state.notes.findIndex(n => n.id === todoIdAndtagId.todoId)].tagsId.push(todoIdAndtagId.tagId)
+      console.log(state.notes.find(n => n.id === todoIdAndtagId.todoId).tagsId.push(todoIdAndtagId.tagId))
+      // state.notes[state.notes.findIndex(n => n.id === todoIdAndtagId.todoId)].tagsId.push(todoIdAndtagId.tagId)
+      console.log('noteId : ' + todoIdAndtagId.todoId, 'id : ' + todoIdAndtagId.tagId)
+
       updateLocalStorage(state.notes)
     },
     deleteNote (state, note) {
